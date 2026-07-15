@@ -11,9 +11,19 @@ fi
 
 ARCH=$(dpkg --print-architecture)   # amd64 or arm64
 
-echo "==> apt packages (curl, git, .NET SDK 8)"
+echo "==> apt packages"
 sudo apt-get update -y
-sudo apt-get install -y curl git gnupg ca-certificates dotnet-sdk-8.0
+sudo apt-get install -y curl git gnupg ca-certificates
+
+echo "==> .NET SDK 8 (dotnet-install script; works on any Ubuntu release)"
+if [ ! -x "$HOME/.dotnet/dotnet" ] && ! command -v dotnet >/dev/null; then
+  curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0
+fi
+if [ -x "$HOME/.dotnet/dotnet" ]; then
+  grep -q 'DOTNET_ROOT=' "$HOME/.bashrc" || printf 'export DOTNET_ROOT=$HOME/.dotnet\nexport PATH=$PATH:$HOME/.dotnet\n' >> "$HOME/.bashrc"
+  export DOTNET_ROOT="$HOME/.dotnet"
+  export PATH="$PATH:$HOME/.dotnet"
+fi
 
 echo "==> k3s (lightweight Kubernetes, includes kubectl)"
 if ! command -v k3s >/dev/null; then
