@@ -34,6 +34,16 @@ Why this matters vs. the InfluxDB/TimescaleDB comparison (`../comparison.md`):
 
 ## 1. Create the Kubernetes cluster
 
+**Option A — Linux server / EC2 (Ubuntu 24.04, recommended for the customer demo):**
+
+```bash
+./0-cluster/bootstrap-ubuntu24.sh   # installs k3s, helm, .NET SDK, mongosh, k9s
+```
+
+This runs real k3s directly on the host — no Docker needed. Then skip to step 2.
+
+**Option B — laptop (k3d = k3s in Docker):**
+
 ```bash
 k3d cluster create mongodb-demo
 kubectl get nodes   # verify
