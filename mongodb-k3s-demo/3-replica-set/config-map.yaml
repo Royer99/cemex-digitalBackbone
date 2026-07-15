@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cement-plant-project
+  namespace: mongodb-operator
+data:
+  baseUrl: http://ops-manager-svc.mongodb-operator.svc.cluster.local:8080
+  projectName: cement-plant
+  # REPLACE with your Organization ID from the Ops Manager UI (step 4 of the README)
+  orgId: "<ORG_ID>"

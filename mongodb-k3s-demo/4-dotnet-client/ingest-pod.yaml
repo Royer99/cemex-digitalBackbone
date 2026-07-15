@@ -1,0 +1,24 @@
+# Runs the telemetry client INSIDE the cluster using the full replica set
+# connection string, so failover is completely transparent to the app.
+# Apply via run-in-cluster.sh (it creates the source ConfigMap first).
+apiVersion: v1
+kind: Pod
+metadata:
+  name: plant-telemetry
+  namespace: mongodb-operator
+spec:
+  restartPolicy: Never
+  containers:
+    - name: ingest
+      image: mcr.microsoft.com/dotnet/sdk:7.0
+      command: ["bash", "-c", "mkdir -p /app && cp /src/* /app/ && cd /app && dotnet run"]
+      env:
+        - name: MONGODB_URI
+          value: "mongodb://replica-set-0.replica-set-svc.mongodb-operator.svc.cluster.local:27017,replica-set-1.replica-set-svc.mongodb-operator.svc.cluster.local:27017,replica-set-2.replica-set-svc.mongodb-operator.svc.cluster.local:27017/?replicaSet=replica-set&retryWrites=true"
+      volumeMounts:
+        - name: src
+          mountPath: /src
+  volumes:
+    - name: src
+      configMap:
+        name: plant-telemetry-src

@@ -1,0 +1,19 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: replica-set
+  namespace: mongodb-operator
+spec:
+  type: ReplicaSet
+  members: 3
+  version: "8.2.0-ent"
+  persistent: true
+  opsManager:
+    configMapRef:
+      name: cement-plant-project
+  credentials: organization-secret
+  # Authentication disabled to keep the demo focused on deployment + HA.
+  # Never do this in production — see the mck-om reference repo for SCRAM setup.
+  security:
+    authentication:
+      enabled: false
