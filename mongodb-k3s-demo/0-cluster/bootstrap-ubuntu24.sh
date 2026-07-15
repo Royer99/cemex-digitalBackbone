@@ -26,8 +26,11 @@ if [ -x "$HOME/.dotnet/dotnet" ]; then
 fi
 
 echo "==> k3s (lightweight Kubernetes, includes kubectl)"
+# Pinned to the channel this demo was validated on. Requires an Ubuntu LTS
+# host (24.04/noble): interim releases ship kernels too new for the
+# RHEL8-based MongoDB images (mongod segfaults, exit 139).
 if ! command -v k3s >/dev/null; then
-  curl -sfL https://get.k3s.io | sh -
+  curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=v1.33 sh -
 fi
 mkdir -p "$HOME/.kube"
 sudo cp /etc/rancher/k3s/k3s.yaml "$HOME/.kube/config"
